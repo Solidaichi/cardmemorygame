@@ -184,56 +184,38 @@ public class CardMemoryController : MonoBehaviour
                     {
                         clickedGameObject = hit.collider.gameObject;
                         
-                        string tagName = clickedGameObject.gameObject.tag;
-                        tag2Name = clickedGameObject.transform.GetChild(0).gameObject.tag;
+                        string tagName = clickedGameObject.transform.GetChild(0).gameObject.tag;
+                        //string tagName = clickedGameObject.gameObject.tag;
+                        
                         
                         Debug.Log("tagName : " + tagName);
-                        Debug.Log("tag2Name : " + tag2Name);
+                        
                         
                         // 最初のタッチ・クリック（クリックした後、同じゾーンではタッチしても開かない。） 
                         if (tagName == "Mean" && !tagBoolMeen) {
                             // クリック・タッチすると表にひっくり返る
                             clickedGameObject.transform.DOLocalRotate(new Vector3(180, 90, 90), 1f).SetEase(Ease.Linear);
-                            
+                            tag2Name = clickedGameObject.gameObject.tag;
+                            Debug.Log("tag2Name : " + tag2Name);
                             cardOpen += 1;
                             tagBoolMeen = true;
                             
                         }else if (tagName == "Card" && !tagBoolCard) {
                             clickedGameObject.transform.DOLocalRotate(new Vector3(-180, 180, 90), 1f).SetEase(Ease.Linear);
-                            
+                            tag3Name = clickedGameObject.gameObject.tag;
+                            Debug.Log("tag3Name : " + tag3Name);
                             cardOpen += 1;
                             tagBoolCard = true;
                         } 
-                    }
-                }
-                // 2回目のタッチ (問題２回目も同時にタッチするためそのまま正解に行ってしまう)
-                if (Input.GetMouseButtonDown(0) && cardOpen == 1 && (tagBoolCard || tagBoolMeen))
-                {
-                    Debug.Log("uio");
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit = new RaycastHit();
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        clickedGameObject = hit.collider.gameObject;
-                        
-                        string tag3Name = clickedGameObject.gameObject.tag;
-                        tag3Name = clickedGameObject.transform.GetChild(0).gameObject.tag;
-                        
-                        Debug.Log("tag3Name : " + tag3Name);
-                        
-                        if(tag3Name == tag2Name) {
-                            Debug.Log("seikai");
-                            GameObject destryObj = GameObject.FindWithTag(tag2Name);
-                            GameObject destroyObj2 = GameObject.FindWithTag(tag3Name);
-                            Destroy(destryObj);
-                            Destroy(destroyObj2);
-                        }else {
-                            Debug.Log("zannen");
-                        }
-                        
-                    }
 
-                    
+                        if(tag2Name == tag3Name && cardOpen >= 2) {
+                            Debug.Log("sss");
+                            Destroy(clickedGameObject);
+                            GameObject destroyObj = GameObject.FindWithTag("tag3Name");
+                            Destroy(destroyObj);
+                        }
+                    }
+        
                 }
             }
         }
